@@ -2,7 +2,6 @@ package com.example.cities.controller;
 
 import com.example.cities.dto.CityResponseDto;
 import com.example.cities.service.CityService;
-import java.util.NoSuchElementException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,12 +22,8 @@ public class CityController {
     }
 
     @GetMapping("/next")
-    public ResponseEntity<CityResponseDto> getNextCity(@RequestParam("word") String word) {
-        CityResponseDto cityResponseDto = service.getNextCity(word)
-                .orElseThrow(() -> new NoSuchElementException("Гравець ввів"
-                        + " слово не на ту літеру."));
-
-        return ResponseEntity.ok(cityResponseDto);
+    public ResponseEntity<CityResponseDto> getNextCity(@RequestParam("name") String name) {
+        return ResponseEntity.ok(service.getNextCity(name));
     }
 
     @PostMapping("/end")
