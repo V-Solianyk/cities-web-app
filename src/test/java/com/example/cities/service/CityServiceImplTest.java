@@ -108,41 +108,55 @@ class CityServiceImplTest {
 
     @Test
     void validateCityInput_wrongLetter_notOk() {
+        String cityName = "Kyiv";
         when(getLastCity()).thenReturn("Lviv");
 
         CustomException exception = assertThrows(CustomException.class,
-                () -> cityService.getNextCity("Kyiv"));
+                () -> cityService.getNextCity(cityName));
 
-        assertEquals("Гравець ввів слово не на ту літеру", exception.getMessage());
+        assertEquals("Ви ввели слово не на ту літеру. Попереднє місто: "
+                + getLastCity() + " Ви ввели: " + cityName, exception.getMessage());
     }
 
     @Test
     void validateCityInput_emptyName_notOk() {
+        String cityName = "";
         when(getLastCity()).thenReturn("Lviv");
 
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
-                () -> cityService.getNextCity(""));
+                () -> cityService.getNextCity(cityName));
 
-        assertEquals("Невірний стан гри: одне з слів є пустим", exception.getMessage());
+        assertEquals("Назва міста не може бути пустою: " + cityName, exception.getMessage());
     }
 
     @Test
     void validateCityInput_nullName_notOk() {
+        String cityName = null;
         when(getLastCity()).thenReturn("Lviv");
 
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
                 () -> cityService.getNextCity(null));
 
-        assertEquals("Невірний стан гри: одне з слів є пустим", exception.getMessage());
+        assertEquals("Назва міста не може бути пустою: " + cityName, exception.getMessage());
     }
 
     @Test
     void validateCityInput_emptyLastCity_notOk() {
+        String lastCity = "";
+        when(getLastCity()).thenReturn(lastCity);
+
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
+                () -> cityService.getNextCity("Kyiv"));
+        assertEquals("Останнє місто не може бути пустим: " + lastCity, exception.getMessage());
+    }
+
+    @Test
+    void validateCityInput_lastCityNull_notOk() {
         when(getLastCity()).thenReturn(null);
 
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
                 () -> cityService.getNextCity("Kyiv"));
-        assertEquals("Невірний стан гри: одне з слів є пустим", exception.getMessage());
+        assertEquals("Останнє місто не може бути пустим: " + null, exception.getMessage());
     }
 
     private String getLastCity() {
