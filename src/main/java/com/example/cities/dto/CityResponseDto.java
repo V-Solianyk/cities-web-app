@@ -6,5 +6,5 @@ import lombok.Setter;
 @Getter
 @Setter
 public class CityResponseDto {
-    private String city;
+    private String name;
 }
