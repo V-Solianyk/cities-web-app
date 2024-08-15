@@ -27,7 +27,7 @@ public class CityServiceImpl implements CityService {
     public CityResponseDto startGame() {
         City randomCity = repository.findById(new Random().nextLong(TOTAL_COUNT_CITY_IN_UKRAINE))
                 .orElseThrow(NoSuchElementException::new);
-        setLastCity(randomCity);
+        setLastCity(randomCity.getName());
         repository.delete(randomCity);
 
         return mapper.toDto(randomCity);
@@ -40,9 +40,8 @@ public class CityServiceImpl implements CityService {
                 .orElseThrow(() -> new NoSuchElementException("Такого міста не існує"
                         + " або було вже використане."));
         repository.delete(cityFromUser);
-        setLastCity(cityFromUser);
 
-        return mapper.toDto(getCityFromServer());
+        return mapper.toDto(getCityFromServer(name));
     }
 
     @Override
@@ -70,14 +69,14 @@ public class CityServiceImpl implements CityService {
         }
     }
 
-    private City getCityFromServer() {
+    private City getCityFromServer(String name) {
         City cityFromServer = repository.findCitiesStartingWith(String
-                        .valueOf(getLastCity().charAt(getLastCity().length() - 1))).stream()
+                        .valueOf(name.charAt(name.length() - 1))).stream()
                 .findFirst()
                 .orElseThrow(() -> new NoSuchElementException("Такого міста не існує"
                         + " або було вже використане."));
         repository.delete(cityFromServer);
-        setLastCity(cityFromServer);
+        setLastCity(cityFromServer.getName());
 
         return cityFromServer;
     }
@@ -86,7 +85,7 @@ public class CityServiceImpl implements CityService {
         return ((String) servletRequest.getSession().getAttribute(LAST_CITY));
     }
 
-    private void setLastCity(City city) {
-        servletRequest.getSession().setAttribute(LAST_CITY, city.getName());
+    private void setLastCity(String name) {
+        servletRequest.getSession().setAttribute(LAST_CITY, name);
     }
 }
