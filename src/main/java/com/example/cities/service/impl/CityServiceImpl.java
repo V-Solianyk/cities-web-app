@@ -18,14 +18,15 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class CityServiceImpl implements CityService {
     private static final String LAST_CITY = "lastCity";
-    private static final long TOTAL_COUNT_CITY_IN_UKRAINE = 270;
+    private static final long TOTAL_COUNT_CITY_IN_UKRAINE_AVAILABLE_IN_APP = 360;
     private final CityRepository repository;
     private final CityMapper mapper;
     private final HttpServletRequest servletRequest;
 
     @Override
     public CityResponseDto startGame() {
-        City randomCity = repository.findById(new Random().nextLong(TOTAL_COUNT_CITY_IN_UKRAINE))
+        City randomCity = repository.findById(new Random()
+                        .nextLong(TOTAL_COUNT_CITY_IN_UKRAINE_AVAILABLE_IN_APP))
                 .orElseThrow(NoSuchElementException::new);
         setLastCity(randomCity.getName());
         repository.delete(randomCity);
@@ -38,7 +39,7 @@ public class CityServiceImpl implements CityService {
         validateCityInput(name);
         City cityFromUser = repository.findCityByNameIgnoreCase(name)
                 .orElseThrow(() -> new NoSuchElementException("Такого міста не існує"
-                        + " або було вже використане."));
+                        + " або було вже використане:" + name));
         repository.delete(cityFromUser);
 
         return mapper.toDto(getCityFromServer(name));
@@ -57,15 +58,19 @@ public class CityServiceImpl implements CityService {
     }
 
     private void validateCityInput(String name) {
-        if (name == null || name.isEmpty() || getLastCity() == null || getLastCity().isEmpty()) {
-            throw new IllegalArgumentException("Невірний стан гри: одне з слів є пустим");
+        String lastCity = getLastCity();
+        if (name == null || name.isEmpty()) {
+            throw new IllegalArgumentException("Назва міста не може бути пустою: " + name);
         }
-        char lastCityLastCharacter = Character.toLowerCase(getLastCity()
-                .charAt(getLastCity().length() - 1));
+        if (lastCity == null || lastCity.isEmpty()) {
+            throw new IllegalArgumentException("Останнє місто не може бути пустим: " + lastCity);
+        }
+        char lastCityLastCharacter = Character.toLowerCase(lastCity
+                .charAt(lastCity.length() - 1));
         char inputCityFirstCharacter = Character.toLowerCase(name.charAt(0));
-
         if (lastCityLastCharacter != inputCityFirstCharacter) {
-            throw new CustomException("Гравець ввів слово не на ту літеру");
+            throw new CustomException("Ви ввели слово не на ту літеру. Попереднє місто: "
+                    + lastCity + " Ви ввели: " + name);
         }
     }
 
@@ -73,8 +78,8 @@ public class CityServiceImpl implements CityService {
         City cityFromServer = repository.findCitiesStartingWith(String
                         .valueOf(name.charAt(name.length() - 1))).stream()
                 .findFirst()
-                .orElseThrow(() -> new NoSuchElementException("Такого міста не існує"
-                        + " або було вже використане."));
+                .orElseThrow(() -> new NoSuchElementException("Ви виграли! Сервер не може знайти"
+                        + " відповідне місто в базі."));
         repository.delete(cityFromServer);
         setLastCity(cityFromServer.getName());
 
