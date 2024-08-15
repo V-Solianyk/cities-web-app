@@ -19,5 +19,4 @@ public interface CityRepository extends JpaRepository<City, Long> {
 
     @Query("SELECT c FROM City c WHERE LOWER(c.name) LIKE LOWER(CONCAT(:startingCharacter, '%'))")
     List<City> findCitiesStartingWith(@Param("startingCharacter") String startingCharacter);
-
 }
