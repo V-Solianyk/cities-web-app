@@ -31,21 +31,13 @@ public class CityServiceImpl implements CityService {
 
     @Override
     public CityResponseDto getNextCity(String name) {
-        if (name == null || name.isEmpty() || lastCity == null || lastCity.isEmpty()) {
-            throw new IllegalArgumentException("Невірний стан гри: одне з слів є пустим");
-        }
-        char lastCityLastCharacter = Character.toLowerCase(lastCity.charAt(lastCity.length() - 1));
-        char inputCityFirstCharacter = Character.toLowerCase(name.charAt(0));
-
-        if (lastCityLastCharacter != inputCityFirstCharacter) {
-            throw new CustomException("Гравець ввів слово не на ту літеру");
-        }
+        validateCityInput(name);
         City cityFromUser = repository.findCityByNameIgnoreCase(name)
                 .orElseThrow(() -> new NoSuchElementException("Такого міста не існує"
                         + " або було вже використане."));
         repository.delete(cityFromUser);
         lastCity = cityFromUser.getName();
-        return mapper.toDto(getCity());
+        return mapper.toDto(getCityFromServer());
     }
 
     @Override
@@ -55,7 +47,19 @@ public class CityServiceImpl implements CityService {
         return "Спасибі за гру";
     }
 
-    private City getCity() {
+    private void validateCityInput(String name) {
+        if (name == null || name.isEmpty() || lastCity == null || lastCity.isEmpty()) {
+            throw new IllegalArgumentException("Невірний стан гри: одне з слів є пустим");
+        }
+        char lastCityLastCharacter = Character.toLowerCase(lastCity.charAt(lastCity.length() - 1));
+        char inputCityFirstCharacter = Character.toLowerCase(name.charAt(0));
+
+        if (lastCityLastCharacter != inputCityFirstCharacter) {
+            throw new CustomException("Гравець ввів слово не на ту літеру");
+        }
+    }
+
+    private City getCityFromServer() {
         City cityFromServer = repository.findCitiesStartingWith(String
                         .valueOf(lastCity.charAt(lastCity.length() - 1))).stream()
                 .findFirst()
