@@ -22,12 +22,15 @@ public class CityServiceImpl implements CityService {
     private final CityRepository repository;
     private final CityMapper mapper;
     private final HttpServletRequest servletRequest;
+    //todo  I need to refactor README(http://localhost:8080/ and unit Test
 
     @Override
     public CityResponseDto startGame() {
         City randomCity = repository.findById(new Random()
                         .nextLong(TOTAL_COUNT_CITY_IN_UKRAINE_AVAILABLE_IN_APP))
                 .orElseThrow(NoSuchElementException::new);
+        String cityName = randomCity.getName();
+        checkInvalidCityEnding(cityName, cityName.charAt(cityName.length() - 1));
         setLastCity(randomCity.getName());
         repository.delete(randomCity);
 
@@ -67,10 +70,21 @@ public class CityServiceImpl implements CityService {
         }
         char lastCityLastCharacter = Character.toLowerCase(lastCity
                 .charAt(lastCity.length() - 1));
+        char nameLastCharacter = Character.toLowerCase(name.charAt(name.length() - 1));
+        checkInvalidCityEnding(name, nameLastCharacter);
+
         char inputCityFirstCharacter = Character.toLowerCase(name.charAt(0));
         if (lastCityLastCharacter != inputCityFirstCharacter) {
             throw new CustomException("Ви ввели слово не на ту літеру. Попереднє місто: "
                     + lastCity + " Ви ввели: " + name);
+        }
+    }
+
+    private void checkInvalidCityEnding(String cityName, char lastCharacterCityName) {
+        if (lastCharacterCityName == 'и' || lastCharacterCityName == 'ь') {
+            throw new CustomException("Назва введеного міста " + cityName + " закінчується на "
+                    + lastCharacterCityName + ", і жодне місто не починається з цього символу. "
+                    + "Почніть гру заново.");
         }
     }
 
