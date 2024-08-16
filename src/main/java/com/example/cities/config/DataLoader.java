@@ -239,12 +239,10 @@ public class DataLoader {
             cityRepository.save(new City("Монастириська"));
             cityRepository.save(new City("Монастирище"));
             cityRepository.save(new City("Моршин"));
-            cityRepository.save(new City("Мукачево"));
             cityRepository.save(new City("Муровані Курилівці"));
             cityRepository.save(new City("Мукачево"));
             cityRepository.save(new City("Мушкетівка"));
             cityRepository.save(new City("Ніжин"));
-            cityRepository.save(new City("Нікополь"));
             cityRepository.save(new City("Нікополь"));
             cityRepository.save(new City("Нова Каховка"));
             cityRepository.save(new City("Нова Одеса"));
@@ -255,16 +253,12 @@ public class DataLoader {
             cityRepository.save(new City("Новомосковськ"));
             cityRepository.save(new City("Новий Розділ"));
             cityRepository.save(new City("Новий Буг"));
-            cityRepository.save(new City("Новий Буг"));
-            cityRepository.save(new City("Носівка"));
             cityRepository.save(new City("Носівка"));
             cityRepository.save(new City("Обухів"));
             cityRepository.save(new City("Олександрівка"));
             cityRepository.save(new City("Олександрія"));
             cityRepository.save(new City("Олешки"));
-            cityRepository.save(new City("Олешки"));
             cityRepository.save(new City("Олевськ"));
-            cityRepository.save(new City("Олександрівка"));
             cityRepository.save(new City("Охтирка"));
             cityRepository.save(new City("Павлоград"));
             cityRepository.save(new City("Павлівка"));
@@ -282,12 +276,9 @@ public class DataLoader {
             cityRepository.save(new City("Попасна"));
             cityRepository.save(new City("Польове"));
             cityRepository.save(new City("Потіївка"));
-            cityRepository.save(new City("Потіївка"));
             cityRepository.save(new City("П'ятихатки"));
             cityRepository.save(new City("Прилуки"));
-            cityRepository.save(new City("Прилуки"));
             cityRepository.save(new City("Придніпровськ"));
-            cityRepository.save(new City("Приморськ"));
             cityRepository.save(new City("Приморськ"));
             cityRepository.save(new City("Пустомити"));
             cityRepository.save(new City("Рахів"));
@@ -299,20 +290,16 @@ public class DataLoader {
             cityRepository.save(new City("Руденків"));
             cityRepository.save(new City("Рудки"));
             cityRepository.save(new City("Рубіжне"));
-            cityRepository.save(new City("Рубіжне"));
             cityRepository.save(new City("Садове"));
             cityRepository.save(new City("Саки"));
             cityRepository.save(new City("Свалява"));
             cityRepository.save(new City("Сватове"));
             cityRepository.save(new City("Світловодськ"));
-            cityRepository.save(new City("Світловодськ"));
             cityRepository.save(new City("Свердловськ"));
             cityRepository.save(new City("Сєверодонецьк"));
-            cityRepository.save(new City("Сєвєродонецьк"));
             cityRepository.save(new City("Синельникове"));
             cityRepository.save(new City("Скороходове"));
             cityRepository.save(new City("Сквир"));
-            cityRepository.save(new City("Славутич"));
             cityRepository.save(new City("Славутич"));
             cityRepository.save(new City("Слов'янськ"));
             cityRepository.save(new City("Слобожанське"));
@@ -374,6 +361,7 @@ public class DataLoader {
             cityRepository.save(new City("Яготин"));
             cityRepository.save(new City("Ямпіль"));
             cityRepository.save(new City("Ясинувата"));
+            cityRepository.save(new City("Ялта"));
         };
     }
 }

@@ -64,6 +64,36 @@ class CityServiceImplTest {
     }
 
     @Test
+    void startGame_invalidCityEnding_firstVersionOfSymbol_notOk() {
+        City city = new City("Нікополь");
+        String name = city.getName();
+        char lastCharacter = name.charAt(name.length() - 1);
+
+        when(cityRepository.findById(anyLong())).thenReturn(Optional.of(city));
+
+        CustomException exception = assertThrows(CustomException.class,
+                () -> cityService.startGame());
+        assertEquals("Назва введеного міста " + name + " закінчується на " + lastCharacter
+                        + ", і жодне місто не починається з цього символу. Почніть гру заново.",
+                exception.getMessage());
+    }
+
+    @Test
+    void startGame_invalidCityEnding_secondVersionOfSymbol_notOk() {
+        City city = new City("Лубни");
+        String name = city.getName();
+        char lastCharacter = city.getName().charAt(city.getName().length() - 1);
+
+        when(cityRepository.findById(anyLong())).thenReturn(Optional.of(city));
+
+        CustomException exception = assertThrows(CustomException.class,
+                () -> cityService.startGame());
+        assertEquals("Назва введеного міста " + name + " закінчується на " + lastCharacter
+                        + ", і жодне місто не починається з цього символу. Почніть гру заново.",
+                exception.getMessage());
+    }
+
+    @Test
     void getNextCity_ok() {
         City lastCity = new City("Енергодар");
         City cityFromUser = new City("Рівне");
@@ -108,8 +138,8 @@ class CityServiceImplTest {
 
     @Test
     void validateCityInput_wrongLetter_notOk() {
-        String cityName = "Kyiv";
-        when(getLastCity()).thenReturn("Lviv");
+        String cityName = "Київ";
+        when(getLastCity()).thenReturn("Львів");
 
         CustomException exception = assertThrows(CustomException.class,
                 () -> cityService.getNextCity(cityName));
@@ -121,7 +151,7 @@ class CityServiceImplTest {
     @Test
     void validateCityInput_emptyName_notOk() {
         String cityName = "";
-        when(getLastCity()).thenReturn("Lviv");
+        when(getLastCity()).thenReturn("Львів");
 
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
                 () -> cityService.getNextCity(cityName));
@@ -132,7 +162,7 @@ class CityServiceImplTest {
     @Test
     void validateCityInput_nullName_notOk() {
         String cityName = null;
-        when(getLastCity()).thenReturn("Lviv");
+        when(getLastCity()).thenReturn("Львів");
 
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
                 () -> cityService.getNextCity(null));
@@ -155,8 +185,38 @@ class CityServiceImplTest {
         when(getLastCity()).thenReturn(null);
 
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
-                () -> cityService.getNextCity("Kyiv"));
+                () -> cityService.getNextCity("Київ"));
         assertEquals("Останнє місто не може бути пустим: " + null, exception.getMessage());
+    }
+
+    @Test
+    void validateCityInput_invalidCityEnding_firstVersionOfSymbol_notOk() {
+        City cityFromUser = new City("Печенеги");
+        String name = cityFromUser.getName();
+        char lastCharacter = name.charAt(name.length() - 1);
+        when(getLastCity()).thenReturn("Ліп");
+
+        CustomException exception = assertThrows(CustomException.class,
+                () -> cityService.getNextCity(name));
+
+        assertEquals("Назва введеного міста " + name + " закінчується на " + lastCharacter
+                        + ", і жодне місто не починається з цього символу. Почніть гру заново.",
+                exception.getMessage());
+    }
+
+    @Test
+    void validateCityInput_invalidCityEnding_secondVersionOfSymbol_notOk() {
+        City cityFromUser = new City("Печень");
+        String name = cityFromUser.getName();
+        char lastCharacter = name.charAt(name.length() - 1);
+        when(getLastCity()).thenReturn("Ліп");
+
+        CustomException exception = assertThrows(CustomException.class,
+                () -> cityService.getNextCity(name));
+
+        assertEquals("Назва введеного міста " + name + " закінчується на " + lastCharacter
+                        + ", і жодне місто не починається з цього символу. Почніть гру заново.",
+                exception.getMessage());
     }
 
     private String getLastCity() {

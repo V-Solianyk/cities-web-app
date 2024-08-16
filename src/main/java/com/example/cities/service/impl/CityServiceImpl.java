@@ -18,11 +18,10 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class CityServiceImpl implements CityService {
     private static final String LAST_CITY = "lastCity";
-    private static final long TOTAL_COUNT_CITY_IN_UKRAINE_AVAILABLE_IN_APP = 360;
+    private static final long TOTAL_COUNT_CITY_IN_UKRAINE_AVAILABLE_IN_APP = 350;
     private final CityRepository repository;
     private final CityMapper mapper;
     private final HttpServletRequest servletRequest;
-    //todo  I need to refactor README(http://localhost:8080/ and unit Test
 
     @Override
     public CityResponseDto startGame() {
