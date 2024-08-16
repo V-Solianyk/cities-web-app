@@ -18,7 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class CityServiceImpl implements CityService {
     private static final String LAST_CITY = "lastCity";
-    private static final long TOTAL_COUNT_CITY_IN_UKRAINE_AVAILABLE_IN_APP = 350;
+    private static final long TOTAL_COUNT_CITY = 350;
     private final CityRepository repository;
     private final CityMapper mapper;
     private final HttpServletRequest servletRequest;
@@ -26,11 +26,11 @@ public class CityServiceImpl implements CityService {
     @Override
     public CityResponseDto startGame() {
         City randomCity = repository.findById(new Random()
-                        .nextLong(TOTAL_COUNT_CITY_IN_UKRAINE_AVAILABLE_IN_APP))
+                        .nextLong(TOTAL_COUNT_CITY))
                 .orElseThrow(NoSuchElementException::new);
         String cityName = randomCity.getName();
-        checkInvalidCityEnding(cityName, cityName.charAt(cityName.length() - 1));
-        setLastCity(randomCity.getName());
+        checkInvalidCityEnding(cityName);
+        setLastCity(cityName);
         repository.delete(randomCity);
 
         return mapper.toDto(randomCity);
@@ -69,8 +69,7 @@ public class CityServiceImpl implements CityService {
         }
         char lastCityLastCharacter = Character.toLowerCase(lastCity
                 .charAt(lastCity.length() - 1));
-        char nameLastCharacter = Character.toLowerCase(name.charAt(name.length() - 1));
-        checkInvalidCityEnding(name, nameLastCharacter);
+        checkInvalidCityEnding(name);
 
         char inputCityFirstCharacter = Character.toLowerCase(name.charAt(0));
         if (lastCityLastCharacter != inputCityFirstCharacter) {
@@ -79,7 +78,8 @@ public class CityServiceImpl implements CityService {
         }
     }
 
-    private void checkInvalidCityEnding(String cityName, char lastCharacterCityName) {
+    private void checkInvalidCityEnding(String cityName) {
+        char lastCharacterCityName = cityName.charAt(cityName.length() - 1);
         if (lastCharacterCityName == 'и' || lastCharacterCityName == 'ь') {
             throw new CustomException("Назва введеного міста " + cityName + " закінчується на "
                     + lastCharacterCityName + ", і жодне місто не починається з цього символу. "
@@ -100,7 +100,7 @@ public class CityServiceImpl implements CityService {
     }
 
     private String getLastCity() {
-        return ((String) servletRequest.getSession().getAttribute(LAST_CITY));
+        return (String) servletRequest.getSession().getAttribute(LAST_CITY);
     }
 
     private void setLastCity(String name) {
